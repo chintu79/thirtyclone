@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  background-color: black;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+canvas{
+  pointer-events: none;
+}
+
+span{
+  background-color: #FD2C2A;
+}
+
