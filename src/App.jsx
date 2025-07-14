@@ -111,7 +111,7 @@ useEffect(() => {
 
   return (
     <>
-    <span ref={growingSpan} className="w-10 h-10 top-[-50px] left-[-50px] rounded-full fixed"></span>
+    <span ref={growingSpan} className="w-10 h-10 top-[-50px] left-[-50px] rounded-full fixed font-sans"></span>
     <div ref={cursorref} className="cursor h-8 w-8 bg-white rounded-full fixed"></div>
     <div ref={mainref} className="h-screen w-screen">
       <div ref={scrollContainerRef} data-scroll-container className="w-full relative font-[helvetica_now_display]">
