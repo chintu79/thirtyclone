@@ -1,23 +1,102 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-body{
-  background-color: black;
+* {
+  font-family: 'Inter', 'Sohne', sans-serif;
+}
+
+body {
+  background-color: #0a0a0a;
   color: white;
   margin: 0;
   padding: 0;
+  cursor: none;
+  letter-spacing: 0.3px;
 }
 
 html {
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
-canvas{
+canvas {
   pointer-events: none;
 }
 
-span{
+.cursor {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border: 2px solid white;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: mix-blend-mode 0.2s ease;
+  mix-blend-mode: screen;
+}
+
+.cursor::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: white;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Grow span for click animation */
+span.grow {
   background-color: #FD2C2A;
+}
+
+/* Horizontal scroll title */
+.scroll-title {
+  display: flex;
+  white-space: nowrap;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  line-height: 1.4;
+}
+
+.scroll-title span {
+  display: inline-block;
+  background: none;
+  margin-right: 1.5rem;
+}
+
+/* Section styles */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 3.5rem;
+  }
+}
+
+.section-subtitle {
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+/* Spaced letter effect */
+.letter-spaced {
+  letter-spacing: 0.15em;
+}
+
+/* Text with spacing effect */
+.spaced-text {
+  word-spacing: 0.05em;
+  letter-spacing: 0;
 }
 
