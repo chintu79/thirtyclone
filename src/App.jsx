@@ -2,7 +2,6 @@ import "./index.css";
 import Canvas from "./canvas";
 import data from "./data";
 import Lenis from "lenis";
-import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,76 +9,55 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const SERVICES = [
-  { num: "01", title: "CREATIVE", items: ["Art direction", "Creative direction"] },
-  { num: "02", title: "DESIGN", items: ["Digital Design", "UX/UI Design", "Web Design", "Graphic Design", "3D Design", "Interactive Design", "Illustration Design", "Brand Design"] },
-  { num: "03", title: "ANIMATION", items: ["2D Animation", "3D Animation", "Motion Graphics", "Experimental Animation", "Typography Animation"] },
-  { num: "04", title: "TECHNOLOGY", items: ["Development", "Implementation", "Creative Coding", "Prototyping", "Quality Assurance", "Testing"] },
-  { num: "05", title: "PROJECT DELIVERY", items: ["Production Strategy", "Project Direction", "Operations Excellence", "Team Coordination"] },
-  { num: "06", title: "EXAMPLE PRODUCTS", items: ["Social Ads", "Websites", "AR Filters and Experiences", "Display Ads (Html5, Static, Rich media)", "Digital Out of Home", "Static and Animated Assets", "Digital Installations", "Design Toolkits"] },
+  ["Creative", ["Art direction", "Creative direction"]],
+  ["Design", ["Digital design", "UX/UI design", "Web design", "Graphic design", "3D design", "Interactive design", "Illustration design", "Brand design"]],
+  ["Animation", ["2D animation", "3D animation", "Motion graphics", "Experimental animation", "Typography animation"]],
+  ["Technology", ["Development", "Implementation", "Creative coding", "Prototyping", "Quality assurance", "Testing"]],
+  ["Project delivery", ["Production strategy", "Project direction", "Operations excellence", "Team coordination"]],
+  ["Example products", ["Social ads", "Websites", "AR filters and experiences", "Display ads", "Digital out of home", "Static and animated assets", "Digital installations", "Design toolkits"]],
 ];
 
-const ROLES = ["Project Managers", "Digital Producers", "Designers", "Illustrators", "Animators", "3D Artists", "Motion Designers", "Developers and Coders", "Creative Technologists", "Sound Engineers"];
+const WHO = [
+  ["Agile", "Local to Amsterdam with hubs in London, Paris and Johannesburg, we curate the right team per project and move swiftly."],
+  ["Innovative", "Carefully crafted operational processes and new technology, so our people stay on the creative."],
+  ["Connected", "Community-focused, and deliberate about challenging the status quo. Our people reflect today&apos;s realities and stay relentlessly curious."],
+];
+
+const ROLES = ["Project managers", "Digital producers", "Designers", "Illustrators", "Animators", "3D artists", "Motion designers", "Developers and coders", "Creative technologists", "Sound engineers"];
 
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(email).toLowerCase());
 }
 
-/* split text into animated char spans (Splitting.js-style, no dep) */
-function CharReveal({ as: Tag = "h1", className, children, delay = 0 }) {
+function Marquee() {
   const ref = useRef(null);
   useGSAP(() => {
-    const chars = ref.current?.querySelectorAll(".char");
-    if (!chars) return;
-    gsap.fromTo(chars,
-      { yPercent: 115, rotationZ: 25, opacity: 0 },
-      { yPercent: 0, rotationZ: 0, opacity: 1, duration: 1.05, delay, ease: "power3.out", stagger: 0.024 }
-    );
-  }, { scope: ref });
+    if (!ref.current) return;
+    const el = ref.current;
+    gsap.to(el, { x: -el.scrollWidth / 2, duration: 26, ease: "none", repeat: -1 });
+  }, { scope: ref, dependencies: [] });
+  const line = "FOR ALL THINGS DIGITAL PRODUCTION — ";
   return (
-    <Tag className={className} ref={ref} aria-label={children}>
-      {String(children).split("").map((ch, i) => (
-        <span key={i} className="char inline-block will-change-transform" aria-hidden="true">{ch === " " ? " " : ch}</span>
-      ))}
-    </Tag>
-  );
-}
-
-CharReveal.propTypes = {
-  as: PropTypes.elementType,
-  className: PropTypes.string,
-  children: PropTypes.node.isRequired,
-  delay: PropTypes.number,
-};
-
-/* rotating circular text */
-function CircularText() {
-  return (
-    <svg viewBox="0 0 200 200" className="circular-spin w-32 h-32 md:w-40 md:h-40 text-[#FD2C2A]" aria-hidden="true">
-      <defs>
-        <path id="circlePath" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0" />
-      </defs>
-      <text fill="currentColor" fontSize="11.5" letterSpacing="3.6" fontWeight="700">
-        <textPath href="#circlePath">THIRTYSIXSTUDIO — FOR ALL THINGS DIGITAL PRODUCTION — </textPath>
-      </text>
-      <circle cx="100" cy="100" r="44" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 6" opacity="0.7" />
-      <text x="100" y="107" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="800">36</text>
-    </svg>
+    <div className="marquee-band" aria-hidden="true">
+      <div ref={ref} className="marquee-track">
+        <span className="text-ink-2 text-sm md:text-base">{line.repeat(6)}</span>
+        <span className="text-ink-2 text-sm md:text-base">{line.repeat(6)}</span>
+      </div>
+    </div>
   );
 }
 
 function Accordion() {
   const [open, setOpen] = useState(0);
   return (
-    <div className="mt-2 max-w-4xl">
-      {SERVICES.map((s, i) => (
-        <div key={s.title} className="service" data-open={open === i}>
-          <button className="service-btn" onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i}>
-            <span className="flex items-baseline"><span className="service-index">{s.num}</span><span className="service-title">{s.title}</span></span>
-            <span className="service-chevron">+</span>
+    <div className="mt-10 reveal">
+      {SERVICES.map(([title, items], i) => (
+        <div className="log-row" data-open={open === i} key={title}>
+          <button className="service-toggle" onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i} style={{ display: "contents", background: "none", border: "none", cursor: "pointer", textAlign: "left", color: "inherit", padding: 0, font: "inherit" }}>
+            <span className="log-num">{String(i + 1).padStart(2, "0")}</span>
+            <span className="log-title">{title}</span>
           </button>
-          <div className="service-body">
-            <ul className="service-list">{s.items.map((it) => <li key={it}>{it}</li>)}</ul>
-          </div>
+          <ul className="log-items">{items.map((it) => <li key={it}>{it}</li>)}</ul>
         </div>
       ))}
     </div>
@@ -92,14 +70,12 @@ function ContactForm() {
   const [topic, setTopic] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
-  const formRef = useRef(null);
   const valid = name.trim() && validateEmail(email) && topic && message.trim();
 
   const submit = (e) => {
     e.preventDefault();
     if (!valid || status === "sending") return;
     setStatus("sending");
-    // NOTE: endpoint is the same XHR target the original site uses; this repo ships no backend.
     fetch("sendform.php", { method: "POST", body: new FormData(e.target) })
       .then((r) => r.text())
       .then((t) => setStatus(t && t.trim() === "success" ? "sent" : "error"))
@@ -108,28 +84,28 @@ function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="border border-emerald-500/30 bg-emerald-500/5 rounded-xl p-10 text-center">
-        <p className="text-xs tracking-[0.35em] text-emerald-400 mb-3">MESSAGE SENT!</p>
-        <p className="text-xl text-white">Thank you for your message. We will get back to you shortly.</p>
+      <div className="well">
+        <p className="text-sm" style={{ color: "var(--color-success)" }}>Message sent</p>
+        <p className="lead mt-2">Thank you for your message. We will get back to you shortly.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submit} ref={formRef} className="grid md:grid-cols-2 gap-5" noValidate>
+    <form onSubmit={submit} className="grid md:grid-cols-2 gap-4" noValidate>
       <div>
         <label className="contact-label" htmlFor="name">Name</label>
-        <input id="name" name="name" className="contact-field" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" required />
+        <input id="name" name="name" className="contact-field" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
       </div>
       <div>
         <label className="contact-label" htmlFor="email">Email</label>
-        <input id="email" name="email" type="email" className="contact-field" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
-        <p className={`form-error ${email && !validateEmail(email) ? "show" : ""}`}>*Incorrect email</p>
+        <input id="email" name="email" type="email" className="contact-field" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+        <p className={`form-error ${email && !validateEmail(email) ? "show" : ""}`}>Incorrect email</p>
       </div>
       <div className="md:col-span-2">
         <label className="contact-label" htmlFor="topic">Topic</label>
-        <select id="topic" name="topic" className="contact-field" value={topic} onChange={(e) => setTopic(e.target.value)} required>
-          <option value="">Topic*</option>
+        <select id="topic" name="topic" className="contact-field" value={topic} onChange={(e) => setTopic(e.target.value)}>
+          <option value="">Topic</option>
           <option value="Talk about a project">Talk about a project</option>
           <option value="Become part of the team">Become part of the team</option>
           <option value="Something else">Something else</option>
@@ -137,13 +113,11 @@ function ContactForm() {
       </div>
       <div className="md:col-span-2">
         <label className="contact-label" htmlFor="message">Message</label>
-        <textarea id="message" name="message" className="contact-field min-h-[110px]" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Tell us about the project…" required />
+        <textarea id="message" name="message" className="contact-field min-h-[100px]" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Tell us about the project" />
       </div>
-      <div className="md:col-span-2 flex items-center gap-6 flex-wrap">
-        <button type="submit" className={`btn-send ${valid ? "" : "disabled"}`} disabled={!valid || status === "sending"}>
-          {status === "sending" ? "SENDING…" : "SEND"}
-        </button>
-        {status === "error" && <p className="form-error show">Send failed — this static clone has no mail backend. Email <a className="underline" href="mailto:shrikrishnachinta79@gmail.com">shrikrishnachinta79@gmail.com</a></p>}
+      <div className="md:col-span-2 flex items-center gap-5 flex-wrap">
+        <button type="submit" className="btn-ember" style={status === "sent" ? { background: "var(--color-success)" } : undefined} disabled={!valid || status === "sending"}>{status === "sent" ? "Sent" : status === "sending" ? "Sending" : "Send"}</button>
+        {status === "error" && <p className="form-error show">This static clone has no mail backend. Email <a className="underline underline-offset-2" href="mailto:shrikrishnachinta79@gmail.com">shrikrishnachinta79@gmail.com</a></p>}
       </div>
     </form>
   );
@@ -153,11 +127,7 @@ export default function App() {
   const [showCanvas, setShowCanvas] = useState(false);
   const cursorRef = useRef(null);
   const mainRef = useRef(null);
-  const scrollTitleRef = useRef(null);
-  const heroTitleRef = useRef(null);
-  const heroSectionRef = useRef(null);
 
-  // Lenis smooth scroll (what the real site runs)
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
     let raf;
@@ -166,181 +136,143 @@ export default function App() {
     return () => { cancelAnimationFrame(raf); lenis.destroy(); };
   }, []);
 
-  // Custom cursor — grows over interactive elements
   useGSAP(() => {
     if (!mainRef.current || !cursorRef.current) return;
-    const move = (e) => gsap.to(cursorRef.current, { x: e.clientX - 12, y: e.clientY - 12, duration: 0.18, ease: "power2.out" });
-    const over = () => gsap.to(cursorRef.current, { scale: 1.6, duration: 0.3 });
-    const out = () => gsap.to(cursorRef.current, { scale: 1, duration: 0.3 });
+    const move = (e) => gsap.to(cursorRef.current, { x: e.clientX - 9, y: e.clientY - 9, duration: 0.2, ease: "power2.out" });
+    const over = () => gsap.to(cursorRef.current, { scale: 1.7, duration: 0.25 });
+    const out = () => gsap.to(cursorRef.current, { scale: 1, duration: 0.25 });
     mainRef.current.addEventListener("mousemove", move);
-    mainRef.current.querySelectorAll("a, button, .service-btn").forEach((el) => {
-      el.addEventListener("mouseenter", over);
-      el.addEventListener("mouseleave", out);
-    });
-    return () => mainRef.current?.removeEventListener("mousemove", move);
+    const hoverables = mainRef.current.querySelectorAll("a, button, .chip");
+    hoverables.forEach((el) => { el.addEventListener("mouseenter", over); el.addEventListener("mouseleave", out); });
+    return () => { mainRef.current?.removeEventListener("mousemove", move); hoverables.forEach((el) => { el.removeEventListener("mouseenter", over); el.removeEventListener("mouseleave", out); }); };
   }, { scope: mainRef, dependencies: [showCanvas] });
 
-  // Marquee
+  // one reveal pass; visible by default, gsap only enhances
   useGSAP(() => {
-    if (!scrollTitleRef.current) return;
-    const el = scrollTitleRef.current;
-    const totalWidth = el.scrollWidth / 2;
-    gsap.to(el, { x: -totalWidth, duration: 16, ease: "none", repeat: -1 });
-  }, { scope: scrollTitleRef, dependencies: [] });
-
-  // Scroll scrub parallax: hero title drifts, orbs drift at own rates
-  useGSAP(() => {
-    gsap.utils.toArray(".parallax-slow").forEach((el) => {
-      gsap.fromTo(el, { yPercent: 12 }, { yPercent: -18, ease: "none",
-        scrollTrigger: { trigger: el.closest("section") ?? el, start: "top top", end: "bottom top", scrub: 1.1 } });
-    });
-    gsap.utils.toArray(".parallax-fast").forEach((el) => {
-      gsap.fromTo(el, { yPercent: 30 }, { yPercent: -30, ease: "none",
-        scrollTrigger: { trigger: el.closest("section") ?? el, start: "top bottom", end: "bottom top", scrub: 0.8 } });
-    });
     gsap.utils.toArray(".reveal").forEach((el) => {
-      gsap.fromTo(el, { y: 56, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out",
-        scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none reverse" } });
+      gsap.fromTo(el, { y: 26 }, { y: 0, duration: 0.75, ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 88%" } });
     });
   }, { scope: mainRef, dependencies: [] });
 
   const pepperBurst = () => {
-    setShowCanvas((prev) => !prev);
-    gsap.fromTo("body", { backgroundColor: "#FD2C2A" }, { backgroundColor: "#0a0a0a", duration: 1.4, ease: "power2.out" });
+    setShowCanvas((v) => !v);
+    gsap.fromTo("body", { backgroundColor: "#FD2C2A" }, { backgroundColor: "var(--color-paper)", duration: 1.3, ease: "power2.out" });
   };
 
   return (
     <>
       <div ref={cursorRef} className="cursor" aria-hidden="true"></div>
-      <div ref={mainRef} className="selection:bg-[#FD2C2A] selection:text-black bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden">
+      <div ref={mainRef} className="min-h-screen">
 
-        {/* NAV */}
-        <header className="fixed top-0 left-0 w-full z-50 px-[4%] py-5 flex items-center justify-between bg-gradient-to-b from-black/60 to-transparent">
-          <a href="#top" className="text-lg font-extrabold tracking-tight">thirtysix<span className="text-[#FD2C2A]">studio</span></a>
-          <nav className="flex items-center gap-5 md:gap-8">
-            <a className="nav-link" href="#work">Work</a>
-            <a className="nav-link" href="#who">Who</a>
-            <a className="nav-link" href="#giveback">Give back</a>
+        {/* NAV — edge aligned: wordmark left, links + one action right */}
+        <header className="site-nav">
+          <a className="wordmark" href="#top">thirtysix<b>studio</b></a>
+          <nav className="nav-links" aria-label="Sections">
+            <a className="nav-link" href="#work">What we do</a>
+            <a className="nav-link" href="#who">Who we are</a>
+            <a className="nav-link" href="#giveback">How we give back</a>
             <a className="nav-link" href="#talk">Talk to us</a>
           </nav>
+          <a className="btn-ember" href="#talk">Talk to us</a>
         </header>
 
-        {/* HERO */}
-        <section id="top" ref={heroSectionRef} className="min-h-[94vh] flex flex-col justify-end relative px-[4%] pb-8 pt-24 overflow-hidden">
-          {/* parallax orbs — our own pure-CSS art, no borrowed assets */}
-          <div className="orb orb-red parallax-fast" style={{ top: "12%", right: "8%" }} />
-          <div className="orb orb-ring parallax-slow" style={{ top: "38%", left: "68%" }} />
-          <div className="orb orb-red orb-sm parallax-slow" style={{ top: "66%", left: "3%", opacity: 0.55 }} />
-          {showCanvas && data[0].map((d) => <Canvas key={d.startIndex} details={d} />)}
-
-          <p className="kicker mb-6 parallax-slow">Digital production studio — Amsterdam</p>
-          <CharReveal as="h2" className="text-2xl sm:text-3xl md:text-4xl font-bold leading-snug max-w-3xl">At Thirtysixstudio, we build digital assets and immersive experiences for purposeful brands.</CharReveal>
-          <p className="mt-5 text-white/60 max-w-md">Design, animation and technology for advertising — done properly. ↓ Scroll</p>
-
-          <div className="relative mt-8 md:mt-10">
-            <button ref={heroTitleRef} onClick={pepperBurst} aria-label="THIRTYSIXSTUDIO — click for the pepper easter egg" className="block w-full text-left parallax-slow">
-              <CharReveal as="h1" className="whitespace-nowrap text-[8.6vw] leading-none font-black tracking-tighter hover:text-white/90 transition-colors">THIRTYSIXSTUDIO</CharReveal>
-            </button>
-            <div className="absolute -right-2 bottom-2 md:right-6 md:bottom-4 opacity-90"><CircularText /></div>
-          </div>
-        </section>
-
-        {/* MARQUEE */}
-        <div className="w-full overflow-hidden border-y border-white/10 py-2 bg-black">
-          <div ref={scrollTitleRef} className="flex whitespace-nowrap w-max">
-            {[0, 1].map((n) => <span key={n} className="text-base md:text-xl font-semibold tracking-[0.2em] text-white/80">FOR ALL THINGS DIGITAL PRODUCTION —&nbsp;&nbsp;FOR ALL THINGS DIGITAL PRODUCTION —&nbsp;&nbsp;</span>)}
-          </div>
-        </div>
-
-        {/* 01 WHAT WE DO */}
-        <section id="work" className="relative px-[4%] py-20 overflow-hidden">
-          <div className="orb orb-ring parallax-fast" style={{ top: "6%", left: "84%" }} />
-          <p className="kicker mb-5 reveal">01 — What we do</p>
-          <h2 className="h-display max-w-4xl reveal">We elevate creative production in the advertising industry.</h2>
-          <div className="grid md:grid-cols-2 gap-6 mt-6 max-w-4xl text-white/70 leading-relaxed reveal">
-            <p>Cutting-edge craft, modern technology and top-tier processes — sophisticated work that resonates. Full campaign or one phase, we&apos;ve got you covered.</p>
-            <p>Agile by default: innovation with simplicity, so the journey is seamless, transparent and rewarding.</p>
-          </div>
-          <h3 className="mt-14 mb-3 text-xs tracking-[0.35em] text-white/45 reveal">OUR SERVICES</h3>
-          <Accordion />
-          <p className="mt-8 text-white/65 reveal">Got a project in mind? <a className="text-[#FD2C2A] underline underline-offset-4" href="#talk">Talk to us</a> — or let&apos;s define the undefined together.</p>
-        </section>
-
-        {/* 02 WHO WE ARE */}
-        <section id="who" className="px-[4%] py-20 bg-[#0d0d0d]">
-          <p className="kicker mb-5 reveal">02 — Who we are</p>
-          <h2 className="h-display max-w-4xl reveal">Creative production, while creating impact and opportunity.</h2>
-          <div className="grid md:grid-cols-3 gap-8 mt-12 max-w-6xl">
-            {[
-              ["Agile", "Efficiency, not geography. Amsterdam-local, London/Paris/Johannesburg-hubbed — the right team per project, moving swiftly."],
-              ["Innovative", "Carefully crafted processes and new technology, so work runs smoothly and people stay on the creative."],
-              ["Connected", "Community-focused and deliberate about challenging the status quo. Our people reflect today&apos;s realities and stay relentlessly curious."],
-            ].map(([t, d]) => (
-              <div key={t} className="border-t border-white/10 pt-5 reveal">
-                <h3 className="text-xl font-bold">{t}</h3>
-                <p className="mt-2 text-white/65 leading-relaxed text-[0.95rem]">{d}</p>
+        {/* HERO — Stage: headline left, the spinning pepper right */}
+        <section id="top" className="section hero-fill" style={{ paddingBottom: "var(--space-xl)" }}>
+          <div className="container hero-grid grid items-center gap-10 hero-fill-inner" style={{ gridTemplateColumns: "minmax(0, 7fr) minmax(0, 4fr)" }}>
+            <div style={{ gridColumn: "span 7 / span 7" }}>
+              <h1>Digital assets and experiences for purposeful brands.</h1>
+              <p className="lead mt-5">A boutique production studio focused on design, animation and technology.</p>
+              <div className="mt-8 flex items-center gap-3 flex-wrap">
+                <a className="btn-ember" href="#talk">Talk to us</a>
+                <a className="btn-ghost" href="#work">See what we do</a>
               </div>
-            ))}
-          </div>
-          <div className="grid md:grid-cols-2 gap-10 mt-14 max-w-6xl items-center">
-            <p className="text-white/75 leading-relaxed reveal">Founded by <span className="text-white">Gita Jagessar</span>, a seasoned production, project and operations director — 15+ years of digital, tech and advertising shaped on work for iconic brands. Thirtysixstudio represents the modern world: socially engaged, and purpose-driven.</p>
-            <img src="https://images.pexels.com/photos/29940157/pexels-photo-29940157/free-photo-of-digital-artist-using-graphic-tablet-with-stylus.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Studio artist at work" className="w-full h-auto rounded-2xl object-cover aspect-[16/10]" loading="lazy" />
-          </div>
-        </section>
-
-        {/* 03 HOW WE GIVE BACK */}
-        <section id="giveback" className="px-[4%] py-20 relative overflow-hidden">
-          <div className="orb orb-red parallax-fast" style={{ top: "20%", left: "88%" }} />
-          <p className="kicker mb-5 reveal">03 — How we give back</p>
-          <h2 className="h-display max-w-5xl reveal">Our industry can perpetuate harm. We&apos;re trying to reverse some of that.</h2>
-          <div className="mt-8 border-l-4 border-[#FD2C2A] pl-6 max-w-3xl reveal">
-            <p className="text-lg text-white/85 leading-relaxed">Through <span className="text-white font-bold">SS36</span> we reinvest revenue and expertise into the communities that shape the culture — community-centric projects for local marginalized groups and career initiatives opening doors into production, design and creative technology.</p>
-          </div>
-        </section>
-
-        {/* 04 TALK TO US */}
-        <section id="talk" className="px-[4%] py-20 bg-[#0d0d0d]">
-          <p className="kicker mb-5 reveal">04 — Talk to us</p>
-          <h2 className="h-display max-w-4xl reveal">Ready to get your project off the ground?</h2>
-          <div className="grid md:grid-cols-2 gap-10 mt-12 max-w-6xl">
-            <div className="reveal">
-              <h3 className="text-xs tracking-[0.35em] text-white/45 mb-3">TALENT</h3>
-              <p className="text-white/75 leading-relaxed">Always on the lookout for progressive collaborators who take pride in exceptional work and a continuous drive to learn.</p>
-              <h4 className="mt-6 text-xs tracking-[0.35em] text-white/45 mb-3">ROLES OPEN</h4>
-              <div className="flex flex-wrap gap-2">{ROLES.map((r) => <span key={r} className="chip">{r}</span>)}</div>
             </div>
-            <div className="reveal">
-              <h3 className="text-xs tracking-[0.35em] text-white/45 mb-3">CLIENTS</h3>
-              <p className="text-white/75 leading-relaxed">We&apos;re accepting new clients and are excited to hear from you. Not sure what you need? We&apos;ll help you define the undefined.</p>
-              <a href="mailto:hello@thirtysixstudio.com" className="mt-6 inline-block text-xl font-bold text-[#FD2C2A] underline underline-offset-8 decoration-2">hello@thirtysixstudio.com</a>
+            <div className="pepper-stage" style={{ justifySelf: "start", minHeight: 300, maxWidth: "100%" }}>
+              <div style={{ position: "relative", width: 260, height: 260 }}>
+                <Canvas details={{ startIndex: 0, numImages: 150, duration: 5, size: 144, top: 0, left: 0, zIndex: 0 }} />
+                <button onClick={pepperBurst} aria-label="Pepper burst" className="border-none bg-transparent p-0" style={{ position: "absolute", inset: 0, cursor: "none" }} />
+              </div>
             </div>
           </div>
+        </section>
 
-          <div className="mt-14 max-w-6xl border border-white/10 rounded-2xl p-6 md:p-8 reveal">
-            <h3 className="text-xs tracking-[0.35em] text-white/45 mb-5">DROP US A LINE</h3>
-            <ContactForm />
+        <Marquee />
+
+        {/* 01 WORK — a firing log of six services */}
+        <section id="work" className="section">
+          <div className="container">
+            <h2 className="h-section reveal">Creative production for ambitious advertising.</h2>
+            <Accordion />
+            <p className="mt-8 text-muted reveal">Got a project in mind? <a className="underline underline-offset-4 text-ink" href="#talk">Talk to us</a>, or let&apos;s define the undefined.</p>
           </div>
         </section>
 
-        {/* 05 SPICE */}
-        <section className="px-[4%] py-20 text-center">
-          <p className="kicker mb-3 reveal">PSSST.</p>
-          <h2 className="h-display reveal">Looking for something spicy?</h2>
-          <p className="mt-3 text-white/60 max-w-md mx-auto reveal">Floating adjuma peppers or the big red button — unlock our fiery alter ego.</p>
-          <button onClick={pepperBurst} className="mt-8 inline-flex items-center gap-3 bg-[#FD2C2A] text-black font-black tracking-[0.2em] rounded-lg px-8 py-4 hover:bg-[#ff443f] transition-colors reveal">BRING THE HEAT!</button>
+        {/* 02 WHO */}
+        <section id="who" className="section">
+          <div className="container">
+            <h2 className="h-section reveal">We create impact and opportunity, not just output.</h2>
+            <div className="wells mt-10">
+              {WHO.map(([t, d]) => (
+                <div key={t} className="well reveal"><h3>{t}</h3><p className="mt-2 text-muted">{d}</p></div>
+              ))}
+            </div>
+            <p className="mt-8 max-w-3xl text-ink-2 reveal">Founded by <span className="text-ink">Gita Jagessar</span>, a production, project and operations director from Amsterdam, with 15+ years across digital, tech and advertising. Thirtysixstudio represents the modern world: socially engaged, and purpose-driven.</p>
+            {showCanvas && data[1].map((d) => <Canvas key={d.startIndex} details={d} />)}
+          </div>
         </section>
 
-        {/* FOOTER */}
-        <footer className="border-t border-white/10 px-[4%] py-8">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+        {/* 03 GIVE BACK */}
+        <section id="giveback" className="section">
+          <div className="container">
+            <h2 className="h-section reveal">Our industry can perpetuate harm. We are trying to reverse some of that.</h2>
+            <p className="lead mt-6 reveal">Through <span className="text-ink">SS36</span> we reinvest revenue and expertise into the communities that shape the culture: community-centric projects for local marginalized groups, and career initiatives that open doors into production, design and creative technology.</p>
+          </div>
+        </section>
+
+        {/* 04 TALK */}
+        <section id="talk" className="section">
+          <div className="container">
+            <h2 className="h-section reveal">Ready to get your project off the ground?</h2>
+            <div className="grid gap-8 md:grid-cols-2 mt-10">
+              <div className="reveal">
+                <h3>Talent</h3>
+                <p className="mt-2 text-muted">Always on the lookout for progressive collaborators with pride in the work and a continuous drive to learn.</p>
+                <ul className="mt-4 flex flex-wrap gap-2">{ROLES.map((r) => <li key={r} className="chip">{r}</li>)}</ul>
+              </div>
+              <div className="reveal">
+                <h3>Clients</h3>
+                <p className="mt-2 text-muted">We are accepting new clients and we are excited to hear from you. Not sure what you need? We will help you define the undefined.</p>
+                <a className="btn-ghost mt-5" href="mailto:hello@thirtysixstudio.com">hello@thirtysixstudio.com</a>
+              </div>
+            </div>
+            <div className="well mt-10 reveal"><ContactForm /></div>
+          </div>
+        </section>
+
+        {/* spice egg */}
+        <section className="section">
+          <div className="container reveal grid gap-10 md:grid-cols-2 items-center">
             <div>
-              <p className="font-extrabold">thirtysix<span className="text-[#FD2C2A]">studio</span> <span className="text-white/40 font-normal text-xs">— unofficial clone</span></p>
-              <p className="text-[11px] text-white/40 mt-1 max-w-md">Portfolio experiment. Not affiliated with Thirtysixstudio B.V. Copy, design and assets belong to their owners.</p>
+              <h2 className="h-section" style={{ maxWidth: "none" }}>Something spicy, anyone?</h2>
+              <p className="lead mt-4">Hit the button and meet our fiery alter ego.</p>
+              <button onClick={pepperBurst} className="btn-ember mt-8">Bring the heat</button>
             </div>
-            <div className="flex items-center gap-3">
-              <a className="social-link" href="https://www.linkedin.com/company/thirtysixstudio" target="_blank" rel="noreferrer">LinkedIn ↗</a>
-              <a className="social-link" href="https://www.instagram.com/thirtysixstudio.ams" target="_blank" rel="noreferrer">Instagram ↗</a>
-              <a className="social-link" href="#top">Top ↑</a>
+            <div className="well" style={{ display: "grid", placeItems: "center", minHeight: 220, borderRadius: "var(--radius-card)" }}>
+              <div style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(5rem, 14vw, 9rem)", lineHeight: 1, color: "var(--color-accent)", letterSpacing: "-0.04em" }}>36</div>
+            </div>
+          </div>
+        </section>
+
+        {/* FOOTER — mast */}
+        <footer className="footer-mast">
+          <div className="container">
+            <p className="footer-word">thirtysix<b style={{ color: "var(--color-accent)", fontWeight: "inherit" }}>studio</b></p>
+            <p className="mt-2 text-muted max-w-md">Digital production studio, Amsterdam. Unofficial clone; unaffiliated with Thirtysixstudio B.V.</p>
+            <div className="mt-6 flex items-center gap-6 flex-wrap">
+              <a className="foot-link" href="https://www.linkedin.com/company/thirtysixstudio" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a className="foot-link" href="https://www.instagram.com/thirtysixstudio.ams" target="_blank" rel="noreferrer">Instagram</a>
+              <a className="foot-link" href="#top">Back to top</a>
             </div>
           </div>
         </footer>

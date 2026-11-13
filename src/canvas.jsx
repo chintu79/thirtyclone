@@ -71,6 +71,7 @@ function Canvas({details}) {
 
   return (
     <canvas
+      aria-hidden="true"
     data-scroll
     data-scroll-speed={scrollSpeed.current}
       ref={canvasRef}
