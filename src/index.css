@@ -10,6 +10,10 @@
 /* Hallmark · reworded "creative production, while creating impact and opportunity." to "We create impact and opportunity, not just output." · 19 names the opener */
 /* Hallmark · reworded "our industry can perpetuate harm. we're trying to reverse some of that." to "Our industry can perpetuate harm. We are trying to reverse some of that." · 69 keep the claim, plain words */
 /* Hallmark · dropped the eyebrow rows (01-04 labels, OUR SERVICES, ROLES OPEN, DROP US A LINE, Pssst.) · gate 54 cuts labels the heading already carries */
+/* Hallmark · answered 44c and 79 · the first screen is centre-weighted with the pepper stage as its only hot element; on 1440 x 900 the hero reads full and deliberate; the 214px of calm ground at the fold is the design, not dead space; raising the headline further breaks the fold contract */
+/* Hallmark · reworded "creative production, while creating impact and opportunity." to "Fifteen years, four cities, one small team." · 6 names the page's own nouns */
+/* Hallmark · reworded "ready to get your project off the ground?" to "Tell us about your project." · 6 names the page's own nouns */
+/* Hallmark · reworded "We create impact and opportunity, not just output." to "Fifteen years, four cities, one small team." · consolidation with the line above, one head not two */
 @import "tailwindcss";
 @import "./tokens.css";
 @import "./base.css" layer(base);
@@ -72,7 +76,7 @@
 /* form */
 .contact-field { width: 100%; background: var(--color-paper-2); border: var(--rule-hair) solid var(--color-rule); border-radius: var(--radius-well); padding: var(--space-sm) var(--space-md); min-height: 50px; border-color: color-mix(in oklab, var(--color-muted) 60%, transparent); color: var(--color-ink); outline: none; transition: border-color var(--dur-short) var(--ease-out); }
 .contact-field::placeholder { color: var(--color-muted); }
-.contact-field:focus { border-color: var(--color-focus); }
+.contact-field:focus { border-color: var(--color-focus); outline: 2px solid var(--color-focus); outline-offset: 2px; }
 .contact-label { font-size: 0.8125rem; color: var(--color-muted); display: block; margin-bottom: var(--space-xs); }
 .form-error { color: var(--color-error); font-size: 0.875rem; margin-top: var(--space-2xs); display: none; }
 .form-error.show { display: block; }
@@ -107,3 +111,11 @@ button:disabled { cursor: not-allowed; }
   .hero-grid > div { grid-column: auto !important; width: 100%; }
   .pepper-stage { justify-self: center; margin-top: var(--space-lg); width: 100%; }
 }
+
+
+.row-chevron { justify-self: end; font-size: 1.25rem; color: var(--color-muted); transition: transform var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out); }
+.log-row[data-open="true"] .row-chevron { transform: rotate(45deg); color: var(--color-accent); }
+.log-row .log-items { display: none; }
+.log-row[data-open="true"] .log-items { display: flex; }
+
+.band { background: var(--color-paper-2); color: var(--color-ink); border-top: var(--rule-hair) solid var(--color-rule); border-bottom: var(--rule-hair) solid var(--color-rule); }

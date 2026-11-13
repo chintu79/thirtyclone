@@ -56,6 +56,7 @@ function Accordion() {
           <button className="service-toggle" onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i} style={{ display: "contents", background: "none", border: "none", cursor: "pointer", textAlign: "left", color: "inherit", padding: 0, font: "inherit" }}>
             <span className="log-num">{String(i + 1).padStart(2, "0")}</span>
             <span className="log-title">{title}</span>
+            <span className="row-chevron" aria-hidden="true">+</span>
           </button>
           <ul className="log-items">{items.map((it) => <li key={it}>{it}</li>)}</ul>
         </div>
@@ -172,15 +173,14 @@ export default function App() {
             <a className="nav-link" href="#work">What we do</a>
             <a className="nav-link" href="#who">Who we are</a>
             <a className="nav-link" href="#giveback">How we give back</a>
-            <a className="nav-link" href="#talk">Talk to us</a>
           </nav>
           <a className="btn-ember" href="#talk">Talk to us</a>
         </header>
 
         {/* HERO — Stage: headline left, the spinning pepper right */}
         <section id="top" className="section hero-fill" style={{ paddingBottom: "var(--space-xl)" }}>
-          <div className="container hero-grid grid items-center gap-10 hero-fill-inner" style={{ gridTemplateColumns: "minmax(0, 7fr) minmax(0, 4fr)" }}>
-            <div style={{ gridColumn: "span 7 / span 7" }}>
+          <div className="container grid items-center gap-10 hero-fill-inner hero-grid" style={{ gridTemplateColumns: "minmax(0, 7fr) minmax(0, 4fr)" }}>
+            <div>
               <h1>Digital assets and experiences for purposeful brands.</h1>
               <p className="lead mt-5">A boutique production studio focused on design, animation and technology.</p>
               <div className="mt-8 flex items-center gap-3 flex-wrap">
@@ -188,9 +188,10 @@ export default function App() {
                 <a className="btn-ghost" href="#work">See what we do</a>
               </div>
             </div>
-            <div className="pepper-stage" style={{ justifySelf: "start", minHeight: 300, maxWidth: "100%" }}>
-              <div style={{ position: "relative", width: 260, height: 260 }}>
-                <Canvas details={{ startIndex: 0, numImages: 150, duration: 5, size: 144, top: 0, left: 0, zIndex: 0 }} />
+            <div className="pepper-stage" style={{ justifySelf: "center", minHeight: 300, maxWidth: "100%" }}>
+              <div style={{ position: "relative", width: 320, height: 320 }}>
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(8rem, 22vw, 13rem)", lineHeight: 1, letterSpacing: "-0.04em", color: "color-mix(in oklab, var(--color-accent) 30%, transparent)" }}>36</div>
+                <Canvas details={{ startIndex: 0, numImages: 150, duration: 5, size: 167, top: 0, left: 0, zIndex: 0 }} />
                 <button onClick={pepperBurst} aria-label="Pepper burst" className="border-none bg-transparent p-0" style={{ position: "absolute", inset: 0, cursor: "none" }} />
               </div>
             </div>
@@ -208,24 +209,24 @@ export default function App() {
           </div>
         </section>
 
-        {/* 02 WHO */}
+        {/* spice lives here: burst mounts in-section */}
+        
         <section id="who" className="section">
           <div className="container">
-            <h2 className="h-section reveal">We create impact and opportunity, not just output.</h2>
+            <h2 className="h-section reveal">Fifteen years, four cities, one small team.</h2>
             <div className="wells mt-10">
               {WHO.map(([t, d]) => (
                 <div key={t} className="well reveal"><h3>{t}</h3><p className="mt-2 text-muted">{d}</p></div>
               ))}
             </div>
             <p className="mt-8 max-w-3xl text-ink-2 reveal">Founded by <span className="text-ink">Gita Jagessar</span>, a production, project and operations director from Amsterdam, with 15+ years across digital, tech and advertising. Thirtysixstudio represents the modern world: socially engaged, and purpose-driven.</p>
-            {showCanvas && data[1].map((d) => <Canvas key={d.startIndex} details={d} />)}
           </div>
         </section>
 
         {/* 03 GIVE BACK */}
-        <section id="giveback" className="section">
+        <section id="giveback" className="section band">
           <div className="container">
-            <h2 className="h-section reveal">Our industry can perpetuate harm. We are trying to reverse some of that.</h2>
+            <h2 className="h-section reveal" style={{ fontSize: "var(--text-display)", maxWidth: "none", lineHeight: 1.0 }}>Our industry can perpetuate harm. We are trying to reverse some of that.</h2>
             <p className="lead mt-6 reveal">Through <span className="text-ink">SS36</span> we reinvest revenue and expertise into the communities that shape the culture: community-centric projects for local marginalized groups, and career initiatives that open doors into production, design and creative technology.</p>
           </div>
         </section>
@@ -233,7 +234,7 @@ export default function App() {
         {/* 04 TALK */}
         <section id="talk" className="section">
           <div className="container">
-            <h2 className="h-section reveal">Ready to get your project off the ground?</h2>
+            <h2 className="h-section reveal">Tell us about your project.</h2>
             <div className="grid gap-8 md:grid-cols-2 mt-10">
               <div className="reveal">
                 <h3>Talent</h3>
@@ -242,7 +243,7 @@ export default function App() {
               </div>
               <div className="reveal">
                 <h3>Clients</h3>
-                <p className="mt-2 text-muted">We are accepting new clients and we are excited to hear from you. Not sure what you need? We will help you define the undefined.</p>
+                <p className="mt-2 text-muted">We are accepting new clients and we are excited to hear from you. Not sure what you need? We will help you find the shape of it.</p>
                 <a className="btn-ghost mt-5" href="mailto:hello@thirtysixstudio.com">hello@thirtysixstudio.com</a>
               </div>
             </div>
@@ -258,8 +259,10 @@ export default function App() {
               <p className="lead mt-4">Hit the button and meet our fiery alter ego.</p>
               <button onClick={pepperBurst} className="btn-ember mt-8">Bring the heat</button>
             </div>
-            <div className="well" style={{ display: "grid", placeItems: "center", minHeight: 220, borderRadius: "var(--radius-card)" }}>
-              <div style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(5rem, 14vw, 9rem)", lineHeight: 1, color: "var(--color-accent)", letterSpacing: "-0.04em" }}>36</div>
+            <div className="well" style={{ position: "relative", display: "grid", placeItems: "center", minHeight: 220, borderRadius: "var(--radius-card)", overflow: "hidden" }}>
+              {showCanvas
+                ? data[0].map((d) => <Canvas key={d.startIndex} details={d} />)
+                : <div style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(5rem, 13vw, 8rem)", lineHeight: 1, color: "var(--color-accent)", letterSpacing: "-0.04em" }}>36</div>}
             </div>
           </div>
         </section>
