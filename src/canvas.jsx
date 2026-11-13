@@ -10,19 +10,7 @@ function Canvas({details}) {
   const canvasRef = useRef(null);
   const counterRef = useRef({val : startIndex});
   const imageCache = useRef({});
-
-  // PropTypes validation
-  Canvas.propTypes = {
-    details: PropTypes.shape({
-      startIndex: PropTypes.number.isRequired,
-      numImages: PropTypes.number.isRequired,
-      duration: PropTypes.number.isRequired,
-      size: PropTypes.number.isRequired,
-      top: PropTypes.number.isRequired,
-      left: PropTypes.number.isRequired,
-      zIndex: PropTypes.number.isRequired,
-    }).isRequired,
-  };
+  const scrollSpeed = useRef((Math.random() * 2 - 1).toFixed(2));
 
   // Preload images
   useEffect(() => {
@@ -84,7 +72,7 @@ function Canvas({details}) {
   return (
     <canvas
     data-scroll
-    data-scroll-speed={(Math.random() * 2 - 1).toFixed(2)}
+    data-scroll-speed={scrollSpeed.current}
       ref={canvasRef}
       className="absolute pointer-events-none"
       style={{
@@ -94,9 +82,20 @@ function Canvas({details}) {
         left: `${left}%`,
         zIndex: zIndex,
       }}
-      id="canvas"
     ></canvas>
   );
 }
+
+Canvas.propTypes = {
+  details: PropTypes.shape({
+    startIndex: PropTypes.number.isRequired,
+    numImages: PropTypes.number.isRequired,
+    duration: PropTypes.number.isRequired,
+    size: PropTypes.number.isRequired,
+    top: PropTypes.number.isRequired,
+    left: PropTypes.number.isRequired,
+    zIndex: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default Canvas;

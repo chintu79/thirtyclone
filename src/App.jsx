@@ -70,7 +70,7 @@ function App() {
         mainref.current.removeEventListener("mouseleave", handleMouseLeave);
       }
     };
-  }, {scope: mainref});
+  }, {scope: mainref, dependencies: []});
 
   // Horizontal scroll title animation
   useGSAP(() => {
@@ -88,7 +88,7 @@ function App() {
         x: gsap.utils.unitize(x => parseFloat(x) % totalWidth)
       }
     });
-  });
+  }, {scope: scrollTitleRef, dependencies: []});
   
   // Handle click on heading to toggle canvas
   useEffect(() => {
@@ -156,10 +156,10 @@ function App() {
                 thirtysixstudio
               </div>
               <nav className="flex justify-center items-center pr-[1.5%] gap-[30px] text-sm font-medium">
-                <p href="#" className="hover:text-gray-400 transition-colors duration-300">Home</p>
-                <p href="#" className="hover:text-gray-400 transition-colors duration-300">About</p>
-                <p href="#" className="hover:text-gray-400 transition-colors duration-300">Work</p>
-                <p href="#" className="hover:text-gray-400 transition-colors duration-300">Contact</p>
+                <a href="#" className="hover:text-gray-400 transition-colors duration-300">Home</a>
+                <a href="#" className="hover:text-gray-400 transition-colors duration-300">About</a>
+                <a href="#" className="hover:text-gray-400 transition-colors duration-300">Work</a>
+                <a href="#" className="hover:text-gray-400 transition-colors duration-300">Contact</a>
               </nav>
             </nav>
 
