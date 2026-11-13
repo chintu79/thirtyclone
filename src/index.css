@@ -146,3 +146,11 @@ span.grow {
 
 .social-link { display:inline-flex; align-items:center; gap:.35rem; color:#d6d6d0; border:1px solid rgba(255,255,255,.15); border-radius:999px; padding:.45rem 1.1rem; font-size:.85rem; transition: all .25s; }
 .social-link:hover { border-color:#FD2C2A; color:#fff; }
+
+/* ---- parallax orbs (pure CSS art, no borrowed assets) ---- */
+.orb { position: absolute; border-radius: 9999px; pointer-events: none; z-index: 0; }
+.orb-red { width: 180px; height: 180px; background: radial-gradient(circle at 35% 35%, #ff6a63, #FD2C2A 60%, #7a0f0e 100%); opacity: .9; filter: blur(2px); }
+.orb-sm { width: 74px; height: 74px; opacity: .8; }
+.orb-ring { width: 260px; height: 260px; border: 1.5px solid rgba(253,44,42,.4); background: transparent; }
+section { position: relative; }
+main, section > * { position: relative; z-index: 1; }
