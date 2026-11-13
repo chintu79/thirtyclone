@@ -217,7 +217,7 @@ export default function App() {
           </div>
           <div className="absolute right-[2%] bottom-[18%] hidden lg:block"><CircularText /></div>
           <button onClick={pepperBurst} aria-label="Thirtysixstudio — click for the pepper easter egg" className="w-full text-left">
-            <CharReveal as="h1" className="mt-10 text-[13.5vw] leading-[0.85] font-black tracking-tighter hover:text-white/90 transition-colors">THIRTYSIX&#8203;STUDIO</CharReveal>
+            <CharReveal as="h1" className="mt-8 whitespace-nowrap text-[9vw] leading-[0.85] font-black tracking-tighter hover:text-white/90 transition-colors">THIRTYSIXSTUDIO</CharReveal>
           </button>
         </section>
 
